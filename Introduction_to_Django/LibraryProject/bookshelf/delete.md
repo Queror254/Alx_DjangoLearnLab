@@ -1,0 +1,4 @@
+book.delete()
+
+Output:
+<QuerySet []>
