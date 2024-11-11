@@ -1,10 +1,23 @@
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from .models import Book, Library
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import permission_required
 from .forms import BookForm # type: ignore
 
+
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Automatically log the user in after registration
+            return redirect('home')  # Redirect to home or any other page
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
 
 @user_passes_test(lambda u: u.userprofile.role == 'Admin')
 def admin_view(request):
