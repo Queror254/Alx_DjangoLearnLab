@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
-from .models import Author, Book, Library, Librarian
+from .models import Book
+from .models import Library
 
 # Create your views here.
 def home(request):
