@@ -5,10 +5,42 @@ from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponseForbidden
 from .models import Book
 from .models import Library
 
-# Create your views here.
+#Home View
+def home(request):
+    return render(request, 'home.html')
+
+#Role-based Views
+
+# Utility function to check the role
+def is_admin(user):
+    return user.userprofile.role.lower() == 'admin'
+
+def is_librarian(user):
+    return user.userprofile.role.lower() == 'librarian'
+
+def is_member(user):
+    return user.userprofile.role.lower() == 'member'
+
+# Admin view (only accessible by Admin users)
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+# Librarian view (only accessible by Librarian users)
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+# Member view (only accessible by Member users)
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
+
 # User Registration view
 def register(request):
     if request.method == 'POST':
@@ -28,7 +60,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')  # Redirect to the home page or other page
+            return redirect('')  # Redirect to the home page or other page
         else:
             return render(request, 'relationship_app/login.html', {'error': 'Invalid credentials'})
     return render(request, 'relationship_app/login.html')
@@ -39,9 +71,19 @@ def logout_view(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
 
+@login_required
+def profile(request):
+    # Get the user profile data (you can add more fields if needed)
+    user_profile = request.user.userprofile
+    context = {
+        'user': request.user,
+        'profile': user_profile,
+    }
+    return render(request, 'relationship_app/profile.html', context)
 
-def home(request):
-    return render(request, 'home.html')
+
+
+######################
 
 def list_books(request):
     books = Book.objects.all()
