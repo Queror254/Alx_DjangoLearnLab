@@ -12,5 +12,5 @@ def list_books(request):
 
 class LibraryDetailView(DetailView):
     models = Library
-    template_name = 'relationship_app/library_books.html'
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
