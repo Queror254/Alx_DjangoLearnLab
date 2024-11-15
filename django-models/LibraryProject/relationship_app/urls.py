@@ -22,9 +22,9 @@ urlpatterns = [
 
     path('profile/', views.profile, name='profile'),
 
-    path('add-book/', views.add_book, name='add_book'),
-    path('edit-book/<int:pk>/', views.edit_book, name='edit_book'),
-    path('delete-book/', views.delete_book, name='delete_book'),
+    path('add_book/', views.add_book, name='add_book'),
+    path('edit_book/', views.edit_book, name='edit_book'),
+    path('delete_book/', views.delete_book, name='delete_book'),
     path('books/', list_books, name='list_books'),
     path('library/', LibraryDetailView.as_view(), name='library_detail'),
 ]
