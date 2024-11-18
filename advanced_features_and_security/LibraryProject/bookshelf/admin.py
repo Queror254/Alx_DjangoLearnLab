@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from .models import CustomUser
+from .models import Book
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -27,5 +28,14 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
+
+#admin config for the Book model
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'publication_year')
+    list_filter = ('publication_year', 'author')
+    search_fields = ('title', 'author')
+
+#register the Book model
+admin.site.register(Book)
 # Register the custom user model and admin class
 admin.site.register(CustomUser, CustomUserAdmin)
