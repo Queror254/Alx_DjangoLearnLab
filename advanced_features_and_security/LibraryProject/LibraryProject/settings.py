@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'LibraryProject.relationship_app',
-    'bookshelf',
+
+    #my apps    
+    'LibraryProject.bookshelf',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +79,7 @@ WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_models_views',
+        'NAME': 'testdb',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -129,3 +130,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL= 'bookshelf.CustomUser'
+
+AUTHENTICATION_BACKENDS = [
+    'users.backends.EmailAuthBackend',  # Path to your custom backend
+    'django.contrib.auth.backends.ModelBackend',  # Optional, retains the default behavior
+]
