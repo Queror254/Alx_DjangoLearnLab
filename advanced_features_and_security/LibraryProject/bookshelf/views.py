@@ -6,6 +6,20 @@ from .models import Book
 def home(request):
     return render(request, 'home.html')
 
+# Book list view
+def book_list(request):
+    # Retrieve all books from the database
+    books = Book.objects.all()
+
+    return render(request, 'bookshelf/book_list.html', {'books': books})
+
+# Single book detail view
+def book_detail(request, book_id):
+    # Get a specific book by ID or return a 404 if it doesn't exist
+    book = get_object_or_404(Book, id=book_id)
+
+    return render(request, 'bookshelf/book_detail.html', {'book': book})
+
 # View a book (requires can_view permission)
 @permission_required('app_name.can_view', raise_exception=True)
 def view_book(request, book_id):
