@@ -32,6 +32,10 @@ ALLOWED_HOSTS = []
 # Enforce HTTPS for all requests
 SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
 
+# Ensure Django knows when it's behind a proxy and using HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 # HTTP Strict Transport Security (HSTS)
 SECURE_HSTS_SECONDS = 31536000  # 1 year, can be adjusted as needed
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
