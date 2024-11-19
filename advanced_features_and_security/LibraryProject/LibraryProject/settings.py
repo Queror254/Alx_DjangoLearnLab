@@ -27,6 +27,16 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
+# settings.py
+
+# Enforce HTTPS for all requests
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year, can be adjusted as needed
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allows your site to be preloaded in browser HSTS lists
+
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'  # Protects against clickjacking
 SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents the browser from trying to guess the content type
