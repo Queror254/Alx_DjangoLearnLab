@@ -23,9 +23,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u-!2e3*cz)6+o8r$w1ham&e6^pr@+^=z^2(b9e#)k76esuv^y7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
+
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'  # Protects against clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents the browser from trying to guess the content type
+
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensures session cookie is sent over HTTPS
 
 
 # Application definition
@@ -44,6 +51,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',  # Add CSP middleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,6 +59,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "https://apis.google.com")  # Example: Allow scripts from Google API
 
 ROOT_URLCONF = 'LibraryProject.urls'
 

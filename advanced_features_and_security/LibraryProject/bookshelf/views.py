@@ -1,6 +1,18 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from .models import Book
+from .forms import BookForm
+
+
+def create_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = BookForm()
+    return render(request, 'create_book.html', {'form': form})
+
 
 # Home View
 def home(request):
