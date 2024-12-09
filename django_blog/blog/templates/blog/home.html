@@ -1,0 +1,42 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class = "post">
+        <h1>Welcome to the Django Blog</h1>
+        
+        {% if user.is_authenticated %}
+            <p>Hello, {{ user.username }}! Here’s what’s new:</p>
+        {% else %}
+            <p>Welcome! Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a> to get started.</p>
+        {% endif %}
+        </div>
+
+        <div class="post">
+        <h2>Recent Posts</h2>
+        {% if posts %}
+            <ul>
+                {% for post in posts %}
+                    <li>
+                        <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
+                        <p>By {{ post.author }} on {{ post.published_date|date:"F j, Y" }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No posts yet! <a href="{% url 'post_create' %}">Write your first post.</a></p>
+        {% endif %}
+        </div>
+
+        <div class="post">
+        <h2>Quick Links</h2>
+        <ul>
+            <li><button class="btn_1"><a href="{% url 'posts' %}" class="type">View All Posts</a></li></button>
+            {% if user.is_authenticated %}
+                <li><button class="btn_1"><a href="{% url 'post_create' %}" class="type">Create a New Post</a></li></button>
+                <li><button class="btn_1"><a href="{% url 'profile' %}" class="type">Edit Your Profile</a></li></button>
+            {% endif %}
+        </ul>
+        </div>
+    </div>
+{% endblock %}

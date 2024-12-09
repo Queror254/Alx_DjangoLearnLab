@@ -1,0 +1,15 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+    <div class="container">
+        
+        <h1>Posts tagged with "{{ view.kwargs.tag }}"</h1>
+        <ul>
+            {% for post in posts %}
+                <li>
+                    <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+                    <p>{{ post.content|truncatewords:30 }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "blog/base.html" %}
+{% block title %}Logged Out{% endblock %}
+{% block content %}
+    <div class="registry">
+        <h1>You've been logged out</h1>
+        <button ><a href="{% url 'home' %}"></a>Go back to the home page</button>
+    </div>
+{% endblock %}
+
