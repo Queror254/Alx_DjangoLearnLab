@@ -1,9 +1,8 @@
 from rest_framework import serializers
 from .models import CustomUser
-from django.contrib.auth.models import update_last_login
-from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
-
+from rest_framework.authtoken.models import Token
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -30,6 +29,7 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Invalid credentials")
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
