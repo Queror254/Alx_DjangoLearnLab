@@ -18,7 +18,10 @@ class RegisterSerializer(serializers.ModelSerializer):
             bio=validated_data.get('bio'),
             profile_picture=validated_data.get('profile_picture'),
         )
-        return user
+        # Generate the token and return it along with user
+        token, _ = Token.objects.get_or_create(user=user)
+
+        return user, token
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
