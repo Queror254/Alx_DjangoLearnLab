@@ -1,11 +1,15 @@
 from rest_framework import viewsets, permissions
-from .models import Post, Comment
+from .models import Post, Comment, Like
+from notifications.models import Notification
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+from django.contrib.contenttypes.models import ContentType
 
 
 class PostPagination(PageNumberPagination):
@@ -48,3 +52,47 @@ class FeedView(APIView):
         serializer = PostSerializer(posts, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class LikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        user = request.user
+
+        # Prevent a user from liking a post multiple times
+        if Like.objects.filter(user=user, post=post).exists():
+            return Response({"message": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create a like
+        like = Like.objects.create(user=user, post=post)
+
+        # Create a notification for the post owner
+        notification = Notification.objects.create(
+            recipient=post.author,
+            actor=user,
+            verb="liked",
+            target=post,
+            target_ct=ContentType.objects.get_for_model(post),
+        )
+
+        return Response({"message": "Post liked successfully."}, status=status.HTTP_200_OK)
+
+
+class UnLikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        user = request.user
+
+        # Check if the user has liked the post
+        like = Like.objects.filter(user=user, post=post).first()
+        if not like:
+            return Response({"message": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Remove the like
+        like.delete()
+
+        return Response({"message": "Like removed successfully."}, status=status.HTTP_200_OK)
