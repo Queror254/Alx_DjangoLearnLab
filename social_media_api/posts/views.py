@@ -66,7 +66,7 @@ class LikePostView(APIView):
             return Response({"message": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Use get_or_create to ensure a like can only be created once per user/post combination
-        like, created = Like.objects.get_or_create(user=user, post=post)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if not created:  # If a like already exists
             return Response({"message": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
