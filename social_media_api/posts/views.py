@@ -53,20 +53,24 @@ class FeedView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+from rest_framework import generics
 
 class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
         user = request.user
 
         # Prevent a user from liking a post multiple times
         if Like.objects.filter(user=user, post=post).exists():
             return Response({"message": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create a like
-        like = Like.objects.create(user=user, post=post)
+        # Use get_or_create to ensure a like can only be created once per user/post combination
+        like, created = Like.objects.get_or_create(user=user, post=post)
+
+        if not created:  # If a like already exists
+            return Response({"message": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Create a notification for the post owner
         notification = Notification.objects.create(
