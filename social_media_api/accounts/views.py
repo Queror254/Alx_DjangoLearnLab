@@ -1,7 +1,8 @@
 from django.contrib.auth.models import update_last_login
+from django.shortcuts import redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from .models import CustomUser
@@ -23,7 +24,12 @@ class LoginView(APIView):
             user = serializer.validated_data
             token, _ = Token.objects.get_or_create(user=user)
             update_last_login(None, user)
-            return Response({"token": token.key}, status=status.HTTP_200_OK)
+
+            #redirect to profile view: 
+            response = redirect("profile")  # Redirect to the profile view
+            response.set_cookie("token", token.key)  # Optionally store the token in a cookie
+            return response
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileView(APIView):
